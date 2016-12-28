@@ -55,10 +55,14 @@ const demo = {
 		const vectorUp = glMatrix.vec3.fromValues( 0, 1, 0 );
 		glMatrix.vec3.transformQuat( vectorUp, vectorUp, this.controls.quaternion );
 		glMatrix.vec3.normalize( vectorUp, vectorUp );
+		const vectorRight = glMatrix.vec3.fromValues( 1, 0, 0 );
+		glMatrix.vec3.transformQuat( vectorRight, vectorRight, this.controls.quaternion );
+		glMatrix.vec3.normalize( vectorRight, vectorRight );
 
 		this.shader.uniforms.uCamPosition = this.controls.position;
 		this.shader.uniforms.uCamUp = vectorUp;
 		this.shader.uniforms.uCamDir = vectorDir;
+		this.shader.uniforms.uCamRight = vectorRight;
 
 		const normalDt = this.ellapsedTime / 3000;
 		this.shader.uniforms.uGlobalTime = normalDt;
