@@ -9,6 +9,7 @@ uniform vec2 uResolution;
 uniform vec3 uCamPosition;
 uniform vec3 uCamDir;
 uniform vec3 uCamUp;
+uniform vec3 uCamRight;
 
 varying vec2 uv;
 #define FieldOfView 1.0
@@ -146,8 +147,8 @@ vec4 rayMarch(in vec3 from, in vec3 dir, in vec2 pix)
 
 	// 'AO' is based on number of steps.
 	// Try to smooth the count, to combat banding.
-	float smoothStep = float(steps) + float(d/MinimumDistance);
-	float temp = (smoothStep/float(MaxSteps));
+	float smoothStep = float(steps) + d;
+	float temp = smoothStep / float(MaxSteps);
 	float ao = 1.0 - clamp(temp, 0.0, 1.0);
 	
 
@@ -164,19 +165,9 @@ void main()
 {
 	vec2 coord = uv;
 	coord.x *= uResolution.x / uResolution.y;
-
-	// Camera position (eye), and camera target
-	vec3 camPos = vec3(uCamPosition.x,uCamPosition.y,uCamPosition.z);
-	vec3 target = camPos+vec3(uCamDir.x,uCamDir.y,uCamDir.z);
-	vec3 camUp  = vec3(uCamUp.x,uCamUp.y,uCamUp.z);
-	
-	// Calculate orthonormal camera reference system
-	vec3 camDir   = normalize(target-camPos); // direction for center ray
-	camUp = normalize(camUp-dot(camDir,camUp)*camDir); // orthogonalize
-	vec3 camRight = normalize(cross(camDir,camUp));
 	
 	// Get direction for this pixel
-	vec3 rayDir = normalize(camDir + (coord.x*camRight + coord.y*camUp)*FieldOfView);
+	vec3 rayDir = normalize(uCamDir + (coord.x*uCamRight + coord.y*uCamUp)*FieldOfView);
 
-	gl_FragColor = rayMarch(camPos,rayDir,gl_FragCoord.xy);
+	gl_FragColor = rayMarch(uCamPosition,rayDir,gl_FragCoord.xy);
 }
