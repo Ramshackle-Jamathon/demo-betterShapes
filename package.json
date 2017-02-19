@@ -32,6 +32,6 @@
     "eslint-loader": "1.6.1",
     "html-webpack-plugin": "2.26.0",
     "webpack": "2.2.0-rc.0",
-    "webpack-dev-server": "2.2.0-rc.0"
+    "webpack-dev-server": "2.4.0"
   }
 }
